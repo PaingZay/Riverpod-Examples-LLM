@@ -1,0 +1,245 @@
+================================================
+FILE: examples/counter/README.md
+================================================
+The standard Flutter Counter example built with [Riverpod]
+
+This uses `ProviderScope`.
+
+
+[riverpod]: https://github.com/rrousselGit/riverpod
+
+
+
+================================================
+FILE: examples/counter/pubspec.yaml
+================================================
+name: counter
+description: A new Flutter project.
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=1.17.0"
+
+resolution: workspace
+
+dependencies:
+  cupertino_icons: ^1.0.2
+  flutter:
+    sdk: flutter
+  flutter_riverpod:
+  freezed_annotation: ^3.0.0
+  hooks_riverpod:
+  json_annotation: ^4.9.0
+  riverpod:
+  riverpod_annotation:
+
+dev_dependencies:
+  build_runner: ^2.11.0
+  flutter_test:
+    sdk: flutter
+  freezed: ^3.2.0
+  json_serializable: ^6.6.1
+  riverpod_generator:
+
+flutter:
+  uses-material-design: true
+
+
+
+================================================
+FILE: examples/counter/.metadata
+================================================
+# This file tracks properties of this Flutter project.
+# Used by Flutter tool to assess capabilities and perform upgrades etc.
+#
+# This file should be version controlled and should not be manually edited.
+
+version:
+  revision: 94b7ff241e6e5445b7f30215a777eb4971311797
+  channel: master
+
+project_type: app
+
+
+
+================================================
+FILE: examples/counter/lib/main.dart
+================================================
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'main.g.dart';
+
+// A Counter example implemented with riverpod
+
+void main() {
+  runApp(
+    // Adding ProviderScope enables Riverpod for the entire project
+    const ProviderScope(child: MyApp()),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: Home());
+  }
+}
+
+/// Annotating a class by `@riverpod` defines a new shared state for your application,
+/// accessible using the generated [counterProvider].
+/// This class is both responsible for initializing the state (through the [build] method)
+/// and exposing ways to modify it (cf [increment]).
+@riverpod
+class Counter extends _$Counter {
+  /// Classes annotated by `@riverpod` **must** define a [build] function.
+  /// This function is expected to return the initial state of your shared state.
+  /// It is totally acceptable for this function to return a [Future] or [Stream] if you need to.
+  /// You can also freely define parameters on this method.
+  @override
+  int build() => 0;
+
+  void increment() => state++;
+}
+
+class Home extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Counter example')),
+      body: Center(child: Text('${ref.watch(counterProvider)}')),
+      floatingActionButton: FloatingActionButton(
+        // The read method is a utility to read a provider without listening to it
+        onPressed: () => ref.read(counterProvider.notifier).increment(),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+
+
+================================================
+FILE: examples/counter/lib/main.g.dart
+================================================
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'main.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Annotating a class by `@riverpod` defines a new shared state for your application,
+/// accessible using the generated [counterProvider].
+/// This class is both responsible for initializing the state (through the [build] method)
+/// and exposing ways to modify it (cf [increment]).
+
+@ProviderFor(Counter)
+final counterProvider = CounterProvider._();
+
+/// Annotating a class by `@riverpod` defines a new shared state for your application,
+/// accessible using the generated [counterProvider].
+/// This class is both responsible for initializing the state (through the [build] method)
+/// and exposing ways to modify it (cf [increment]).
+final class CounterProvider extends $NotifierProvider<Counter, int> {
+  /// Annotating a class by `@riverpod` defines a new shared state for your application,
+  /// accessible using the generated [counterProvider].
+  /// This class is both responsible for initializing the state (through the [build] method)
+  /// and exposing ways to modify it (cf [increment]).
+  CounterProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'counterProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$counterHash();
+
+  @$internal
+  @override
+  Counter create() => Counter();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
+String _$counterHash() => r'4243b34530f53accfd9014a9f0e316fe304ada3e';
+
+/// Annotating a class by `@riverpod` defines a new shared state for your application,
+/// accessible using the generated [counterProvider].
+/// This class is both responsible for initializing the state (through the [build] method)
+/// and exposing ways to modify it (cf [increment]).
+
+abstract class _$Counter extends $Notifier<int> {
+  int build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+
+
+================================================
+FILE: examples/counter/test/widget_test.dart
+================================================
+// This is a basic Flutter widget test.
+//
+// To perform an interaction with a widget in your test, use the WidgetTester
+// utility that Flutter provides. For example, you can send tap and scroll
+// gestures. You can also use WidgetTester to find child widgets in the widget
+// tree, read text, and verify that the values of widget properties are correct.
+
+import 'package:counter/main.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  testWidgets('Counter increments smoke test', (tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+
+    // Verify that our counter starts at 0.
+    expect(find.text('0'), findsOneWidget);
+    expect(find.text('1'), findsNothing);
+
+    // Tap the '+' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+
+    // Verify that our counter has incremented.
+    expect(find.text('0'), findsNothing);
+    expect(find.text('1'), findsOneWidget);
+  });
+}
+
+
